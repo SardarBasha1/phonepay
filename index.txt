@@ -1,0 +1,29 @@
+import boto3
+
+# Replace with your RDS instance name
+rds_instance_name = 'my-rds-instance'
+
+# Replace with your desired backup retention period in days
+backup_retention_period = 7
+
+# Connect to the RDS service
+rds = boto3.client('rds')
+
+# Create a new DB snapshot
+response = rds.create_db_snapshot(
+    DBSnapshotIdentifier=f'{rds_instance_name}-backup',
+    DBInstanceIdentifier=rds_instance_name
+)
+
+# Print the response
+print(response)
+
+# Set the backup retention period
+response = rds.modify_db_snapshot_attribute(
+    DBSnapshotIdentifier=f'{rds_instance_name}-backup',
+    AttributeName='restore',
+    ValuesToAdd=[backup_retention_period]
+)
+
+# Print the response
+print(response)
